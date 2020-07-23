@@ -38,7 +38,6 @@ describe('test younited credit', () => {
         cy.get('#businessActivityStartDate-input-year').type('2004').should('have.value' , '2004')
         cy.get('#ISCOMPANYBANKRUPT_FALSE').check({force:true})
         cy.contains('Suite').click()
-        cy.contains('Suite').click()
          cy.url().should('contain', '/incomes')
 
          // incomes

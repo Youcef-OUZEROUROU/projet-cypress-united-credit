@@ -1,11 +1,20 @@
 describe('testé le profil Pacsé avec ressource suffisante', () => {
+    let profile = require('../../../fixtures/jdd_younited_credit[2]')
     before(() => {
         cy.visit('https://www.younited-credit.com')
-        cy.get('#projectSelect').select('FURNITURE').should('contain','')
-        cy.get('#amount').select('10K')
-        cy.get('#creditMaturity').select('M6')
+        cy.title().should('include', 'Le Crédit 100% en Ligne')
+    })
+
+        it("Page d'acceuil", () => {
+        cy.choix_du_consomateur(profile.projectSelect, profile.amount, profile.creditMaturity)
+        cy.get('#projectSelect').select('FURNITURE')
+        cy.get('#amount').select('10K').should('contain' , '10000 €')
+        cy.get('#creditMaturity').select('M6').should('contain' , '6 mois')
         cy.contains('CONTINUER').click()
         cy.url().should('contain', '/email')
+    })
+        it ('Page email', () =>{
+        cy.title().should('include', 'Younited Credit')
         cy.get('#email-input').type('toctoc@yopmail.com').should('have.value', 'toctoc@yopmail.com')
         cy.contains('Voir mon offre personnalisée').click()
         cy.url().should('contain', '/familysituation')
@@ -14,8 +23,7 @@ describe('testé le profil Pacsé avec ressource suffisante', () => {
         
         cy.get('#maritalStatus-input').select('COHABITING').should('contain','Vie Maritale / PACS')
         cy.get('#childNumberPropal-input').select('1').should('contain','0')
-        //cy.get(':checkbox').uncheck({force:true})
-        cy.contains('Suite',{timeout: 3000}).click()
+        cy.contains('Suite').click()
         cy.url().should('contain', '/housing')
     })
     it('Logement : Loger par le conjoint', () => {
@@ -23,7 +31,7 @@ describe('testé le profil Pacsé avec ressource suffisante', () => {
         cy.get('#housingStatusFrom-input-month').type('04').should('have.value', '04')
         cy.get('#housingStatusFrom-input-year').type('2011').should('have.value', '2011')
         cy.get(':checkbox').uncheck({force:true})
-        cy.contains('Suite',{timeout: 3000}).click()
+        cy.contains('Suite').click()
         cy.url().should('contain', '/professionalsituation')
     })
     it('Situation proffetionnelle : Secteur privé', () => {
@@ -31,7 +39,7 @@ describe('testé le profil Pacsé avec ressource suffisante', () => {
         cy.get('#profession-input').select('RETIRED_FROM_PUBLIC_SECTOR').should('contain','Retraité du secteur public')
         cy.get('#pensionFrom-input-month').type('12').should('have.value', '12')
         cy.get('#pensionFrom-input-year').type('2015').should('have.value', '2015')
-        cy.contains('Suite',{timeout: 3000}).click()
+        cy.contains('Suite').click()
         cy.url().should('contain', '/partnerprofession')
     })
     it('Situation proffetionnelle conjoint : Secteur public', () => {
@@ -39,25 +47,25 @@ describe('testé le profil Pacsé avec ressource suffisante', () => {
         cy.get('#partnerProfession-input').select('RETIRED_FROM_PUBLIC_SECTOR').should('contain','Retraité du secteur public')
         cy.get('#partnerPensionFrom-input-month').type('12').should('have.value', '12')
         cy.get('#partnerPensionFrom-input-year').type('2017').should('have.value', '2017')
-        cy.contains('Suite',{timeout: 3000}).click()
+        cy.contains('Suite').click()
         cy.url().should('contain', '/incomes')
     })
     it('Salaire', () => {
         cy.get('#mainIncome-input').type('1500').should('have.value', '1500')
         cy.get('#coIncome-input').type('1600').should('have.value', '1600')
-        cy.contains('Suite',{timeout: 3000}).click()
+        cy.contains('Suite').click()
         cy.url().should('contain', '/outcomes')
     })
     it('Montant du loyer', () => {
         cy.get('#rentAmount-input').type('1000').should('have.value', '1000')
         cy.get('#loanCount-input').select('0').should('contain','0')
-        cy.contains('Suite',{timeout: 3000}).click()
+        cy.contains('Suite').click()
         cy.url().should('contain','/bank')
     })
     it('Banque', () => {
         cy.get('#bankCode-input').select('CAISSE_D_EPARGNE').should('contain',"Caisse d'Epargne")
         cy.get('#bankFrom-input-year').type('2004').should('have.value','2004')
-        cy.contains('Suite',{timeout: 3000}).click()
+        cy.contains('Suite').click()
         cy.url().should('contain','/identity')
     })
     it('Identité', () => {

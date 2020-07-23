@@ -1,21 +1,31 @@
 describe(' testé le profil marié avec ressource suffisante', () => {
+    let profile = require('../../../fixtures/jdd_younited_credit[1]')
     before(() => {
         cy.visit('https://www.younited-credit.com')
-        cy.get('#projectSelect').select('FURNITURE').should('contain','')
-        cy.get('#amount').select('10K')
-        cy.get('#creditMaturity').select('M6')
+        cy.title().should('include', 'Le Crédit 100% en Ligne')
+    })
+
+        it("Page d'acceuil", () => {
+        cy.choix_du_consomateur(profile.projectSelect, profile.amount, profile.creditMaturity)
+        cy.get('#projectSelect').select('FURNITURE')
+        cy.get('#amount').select('10K').should('contain' , '10000 €')
+        cy.get('#creditMaturity').select('M6').should('contain' , '6 mois')
         cy.contains('CONTINUER').click()
         cy.url().should('contain', '/email')
-        cy.get('#email-input').type('cici@yopmail.com').should('have.value', 'cici@yopmail.com')
+    })
+        it ('Page email', () =>{
+        cy.title().should('include', 'Younited Credit')
+        cy.get('#email-input').type('titi@yopmail.com').should('have.value', 'titi@yopmail.com')
         cy.contains('Voir mon offre personnalisée').click()
         cy.url().should('contain', '/familysituation')
     })
+    
     it('Marié, Propietaire...', () => {
         
         cy.get('#maritalStatus-input').select('MARRIED').should('contain','Marié(e)')
         cy.get('#childNumberPropal-input').select('1')
         cy.get(':checkbox').uncheck({force:true})
-        cy.contains('Suite',{timeout: 3000}).click()
+        cy.contains('Suite').click()
         cy.url().should('contain', '/housing')
     })
     it('Logement : Locataire', () => {
@@ -23,7 +33,7 @@ describe(' testé le profil marié avec ressource suffisante', () => {
         cy.get('#housingStatusFrom-input-month').type('10').should('have.value', '10')
         cy.get('#housingStatusFrom-input-year').type('2010').should('have.value', '2010')
         cy.get(':checkbox').uncheck({force:true})
-        cy.contains('Suite',{timeout: 3000}).click()
+        cy.contains('Suite').click()
         cy.url().should('contain', '/professionalsituation')
     })
     it('Situation proffetionnelle : Secteur privé', () => {
@@ -32,7 +42,7 @@ describe(' testé le profil marié avec ressource suffisante', () => {
         cy.get('#contractType-input').select('CDI')
         cy.get('#employedFrom-input-month').type('01').should('have.value', '01')
         cy.get('#employedFrom-input-year').type('2005').should('have.value', '2005')
-        cy.contains('Suite',{timeout: 3000}).click()
+        cy.contains('Suite').click()
         cy.url().should('contain', '/partnerprofession')
     })
     it('Situation proffetionnelle conjoint : Secteur privé', () => {
@@ -41,25 +51,25 @@ describe(' testé le profil marié avec ressource suffisante', () => {
         cy.get('#partnerContractType-input').select('CDI').should('contain','CDI')
         cy.get('#partnerEmployedFrom-input-month').type('06').should('have.value', '06')
         cy.get('#partnerEmployedFrom-input-year').type('2008').should('have.value', '2008')
-        cy.contains('Suite',{timeout: 3000}).click()
+        cy.contains('Suite').click()
         cy.url().should('contain', '/incomes')
     })
     it('Salaire', () => {
         cy.get('#mainIncome-input').type('1800').should('have.value', '1800')
         cy.get('#coIncome-input').type('1600').should('have.value', '1600')
-        cy.contains('Suite',{timeout: 3000}).click()
+        cy.contains('Suite').click()
         cy.url().should('contain', '/outcomes')
     })
     it('Montant du loyer', () => {
         cy.get('#mortgageAmount-input').type('800').should('have.value', '800')
         cy.get('#loanCount-input').select('0')
-        cy.contains('Suite',{timeout: 3000}).click()
+        cy.contains('Suite').click()
         cy.url().should('contain','/bank')
     })
     it('Banque', () => {
         cy.get('#bankCode-input').select('CREDIT_AGRICOLE').should('contain','Crédit Agricole')
         cy.get('#bankFrom-input-year').type('2002').should('have.value','2002')
-        cy.contains('Suite',{timeout: 3000}).click()
+        cy.contains('Suite').click()
         cy.url().should('contain','/identity')
     })
     it('Identité', () => {
