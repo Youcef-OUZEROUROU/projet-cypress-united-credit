@@ -1,121 +1,113 @@
-describe(' testé le profil marié avec ressource suffisante', () => {
-    let profile = require('../../../fixtures/jdd_younited_credit[1]')
-    before(() => {
-        cy.visit('https://www.younited-credit.com')
-        cy.title().should('include', 'Le Crédit 100% en Ligne')
+describe('Maried credit', () =>{
+
+    let marier = require('../../fixtures/jdd/maried')
+
+    before('site internet', () =>{
+        cy.visit('https://www.younited-credit.com/')
+        cy.url().should('include', 'younited-credit')
+        cy.get('title').should('contain', 'Le Crédit 100% en Ligne')
     })
 
-        it("Page d'acceuil", () => {
-        cy.choix_du_consomateur(profile.projectSelect, profile.amount, profile.creditMaturity)
-        cy.get('#projectSelect').select('FURNITURE')
-        cy.get('#amount').select('10K').should('contain' , '10000 €')
-        cy.get('#creditMaturity').select('M6').should('contain' , '6 mois')
-        cy.contains('CONTINUER').click()
-        cy.url().should('contain', '/email')
+    it("page d'accueil", () =>{
+        cy.choix_user(marier.projet)
+        cy.wait(3000)
+        cy.buttonClick('CONTINUER')
     })
-        it ('Page email', () =>{
-        cy.title().should('include', 'Younited Credit')
-        cy.get('#email-input').type('titi@yopmail.com').should('have.value', 'titi@yopmail.com')
-        cy.contains('Voir mon offre personnalisée').click()
-        cy.url().should('contain', '/familysituation')
+
+    it('Email', () =>{
+        cy.urlWebSite('/email')
+        cy.pageTitle('Younited Credit')
+        cy.wait(3000)
+        cy.emailUser(marier.identity)
+        cy.get('div').should('have.class', 'wrapper-input input-wrapper--valid')
+        cy.wait(3000)
+        cy.buttonClick('Voir mon offre personnalisée')
     })
     
-    it('Marié, Propietaire...', () => {
-        
-        cy.get('#maritalStatus-input').select('MARRIED').should('contain','Marié(e)')
-        cy.get('#childNumberPropal-input').select('1')
-        cy.get(':checkbox').uncheck({force:true})
-        cy.contains('Suite').click()
-        cy.url().should('contain', '/housing')
+    it('Situation familiale', () =>{
+        cy.urlWebSite('/familysituation')
+        cy.pageTitle('Younited Credit')
+        cy.situation_familiale_user(marier.identity)
+        cy.get('[type="checkbox"]')
+            .uncheck({force:true}) 
+        cy.buttonClick('Suite')
     })
-    it('Logement : Locataire', () => {
-        cy.get('#housingStatus-input').select('HOME_OWNERSHIP_WITH_MORTGAGE').should('contain','Propriétaire (avec crédit immobilier en cours)')
-        cy.get('#housingStatusFrom-input-month').type('10').should('have.value', '10')
-        cy.get('#housingStatusFrom-input-year').type('2010').should('have.value', '2010')
-        cy.get(':checkbox').uncheck({force:true})
-        cy.contains('Suite').click()
-        cy.url().should('contain', '/professionalsituation')
+    it('logement', () =>{
+        cy.urlWebSite('/housing')
+        cy.pageTitle('Younited Credit')
+        cy.situation_user(marier.logement)
+        cy.get('[type="checkbox"]').uncheck({force:true}) 
+        cy.buttonClick('Suite')
     })
-    it('Situation proffetionnelle : Secteur privé', () => {
-        cy.get('#activitySector-input').select('PRIVATE_SECTOR').should('contain','Salarié(e) du secteur privé')
-        cy.get('#profession-input').select('SECURITY_GUARD').should('contain','Agent de sécurité')
-        cy.get('#contractType-input').select('CDI')
-        cy.get('#employedFrom-input-month').type('01').should('have.value', '01')
-        cy.get('#employedFrom-input-year').type('2005').should('have.value', '2005')
-        cy.contains('Suite').click()
-        cy.url().should('contain', '/partnerprofession')
+    it('Situation profetionnelle', () =>{
+        cy.urlWebSite('/professionalsituation')
+        cy.pageTitle('Younited Credit')
+        cy.activityCeliba(marier.activityStatus, marier.activity)
+        cy.get('#ISCOMPANYBANKRUPT_FALSE')
+            .check({ force: true })
+            .should('be.checked')
+        cy.buttonClick('Suite')
     })
-    it('Situation proffetionnelle conjoint : Secteur privé', () => {
-        cy.get('#partnerActivitySector-input').select('PRIVATE_SECTOR').should('contain','Salarié(e) du secteur privé')
-        cy.get('#partnerProfession-input').select('SECURITY_GUARD').should('contain','Agent de sécurité')
-        cy.get('#partnerContractType-input').select('CDI').should('contain','CDI')
-        cy.get('#partnerEmployedFrom-input-month').type('06').should('have.value', '06')
-        cy.get('#partnerEmployedFrom-input-year').type('2008').should('have.value', '2008')
-        cy.contains('Suite').click()
-        cy.url().should('contain', '/incomes')
+    if(marier.identity.maritalStatus != "SINGLE"){
+        it("secteur d'activité du partenaire", () =>{
+            cy.urlWebSite('/partnerprofession')
+            cy.pageTitle('Younited Credit')
+            cy.activite_conjoint_user(marier.activityStatus_partenaire, marier.activity_partenaire)
+            cy.buttonClick('Suite')
+            
+        })
+       
+    }
+    it('Revenu', () =>{
+        cy.urlWebSite('/incomes')
+        cy.pageTitle('Younited Credit')
+        cy.revenu_user(marier.mariedStatus, marier.activity, marier.logement, marier.activity_partenaire)
+        cy.buttonClick('Suite')
     })
-    it('Salaire', () => {
-        cy.get('#mainIncome-input').type('1800').should('have.value', '1800')
-        cy.get('#coIncome-input').type('1600').should('have.value', '1600')
-        cy.contains('Suite').click()
-        cy.url().should('contain', '/outcomes')
+    it('loyer', () =>{
+        cy.urlWebSite('/outcomes')
+        cy.pageTitle('Younited Credit')
+        cy.wait(3000)
+        cy.loyerUser(marier.situation_logement, marier.logement)
+        cy.buttonClick('Suite')
     })
-    it('Montant du loyer', () => {
-        cy.get('#mortgageAmount-input').type('800').should('have.value', '800')
-        cy.get('#loanCount-input').select('0')
-        cy.contains('Suite').click()
-        cy.url().should('contain','/bank')
+    it('Banque', () =>{
+        cy.urlWebSite('/bank')
+        cy.pageTitle('Younited Credit')
+        cy.banque_user(marier.banque)
+        cy.buttonClick('Suite')
     })
-    it('Banque', () => {
-        cy.get('#bankCode-input').select('CREDIT_AGRICOLE').should('contain','Crédit Agricole')
-        cy.get('#bankFrom-input-year').type('2002').should('have.value','2002')
-        cy.contains('Suite').click()
-        cy.url().should('contain','/identity')
+    it('Identité user', () =>{
+        cy.urlWebSite('/identity')
+        cy.pageTitle('Younited Credit')
+        cy.identity(marier.identity)
+        cy.buttonClick('Suite')
     })
-    it('Identité', () => {
-        cy.get('#GENDERCODE_M').check({force:true})
-        cy.get('#lastName-input').type('Cici').should('have.value','Cici')
-        cy.get('#firstName-input').type('Titi').should('have.value','Titi')
-        cy.get('#dateOfBirth-input-day').type('20').should('have.value','20')
-        cy.get('#dateOfBirth-input-month').type('06').should('have.value','06')
-        cy.get('#dateOfBirth-input-year').type('1980').should('have.value','1980')
-        cy.get('#postalCode-input').type('33700').should('have.value','33700')
-        cy.get('#city-input').select('3328133700').should('contain','MERIGNAC')
-        cy.contains('Suite').click()
+
+    it('identity du partenaire', () =>{
+        cy.urlWebSite('/partneridentity')
+        cy.pageTitle('Younited Credit')
+        cy.identity_Partner(marier.partnerStatus, marier.identity_partenaire)
+        cy.buttonClick('Suite')
     })
-    it('Identité conjoint', () => {
-        cy.url().should('contain','/partneridentity')
-        cy.get('#GENDERCODE_MME').check({force:true})
-        cy.get('#lastName-input').type('Cici').should('have.value','Cici')
-        cy.get('#maidenName-input').type('Didi').should('have.value','Didi')
-        cy.get('#firstName-input').type('Katy').should('have.value','Katy')
-        cy.get('#dateOfBirth-input-day').type('10').should('have.value','10')
-        cy.get('#dateOfBirth-input-month').type('12').should('have.value','12')
-        cy.get('#dateOfBirth-input-year').type('1982').should('have.value','1982')
-        cy.get('#postalCode-input').type('33700').should('have.value','33700')
-        cy.get('#city-input').select('3328133700').should('contain','MERIGNAC')
-        cy.contains('Suite').click()
-        //Contact
+
+    it('Contact', () =>{
+        cy.urlWebSite('/contact')
+        cy.pageTitle('Younited Credit')
+        cy.contact( marier.identity)
+        cy.buttonClick('Suite')
     })
-    it('Contacte', () => {
-        cy.url().should('contain','/contact')
-        cy.get('#cellPhoneNumber-input').type('0651736111').should('have.value','0651736111')
-        cy.get('#phoneNumber-input').type('0551736112').should('have.value','0551736112')
-        cy.get('#address-input').type('route des roses').should('have.value',"route des roses")
-        cy.get('#postalCode-input').type('33700').should('have.value','33700')
-        cy.get('#city-input').select('3328133700').should('contain','MERIGNAC')
-        cy.get('#countryZone-input').select('FR').should('contain','France')
-        cy.contains('Suite').click() 
+    /*it('Assurance_Test', () =>{
+        cy.urlWebSite('/offers')
+        cy.pageTitle('Younited Credit')
+        cy.assurance(marier.identity)
+        cy.get('#INSURANCE-JOBLOSS_NO')
+            .check({ force: true })
+            .should('be.checked')
+        cy.buttonClick('Suite')
     })
-    it('Assurance', () => {
-       // cy.url().should('contain','/contact')
-        cy.get('#insurance-subscribers-input').select('YES_YES').should('contain','Pour mon co-emprunteur et moi')
-        cy.get('#INSURANCE-JOBLOSS_YES').check({force:true})
-        cy.contains('Suite').click() 
-    })
-    it('Autres offres', () => {
-        // cy.url().should('contain','/contact')
-         cy.get('#commercialOffer4').check({force:true})
-         cy.contains('Suite').click() 
-     })
+    it('Test_page_offre', () =>{
+        cy.urlWebSite('/modify-offer')
+        cy.pageTitle('Younited Credit')
+    })*/
 })

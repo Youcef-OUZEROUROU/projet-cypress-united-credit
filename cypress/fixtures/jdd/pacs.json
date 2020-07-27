@@ -1,0 +1,89 @@
+{
+    "projet":{
+        "projectSelect": "USEDCAR",
+        "amount": "3K",
+        "creditMaturity": "M6"
+    },
+    "identity":{
+        "gender" : "#GENDERCODE_M",
+        "maritalStatus" : "COHABITING", 
+        "lastName": "chichou" ,
+        "firstName": "dominique", 
+        "dateOfBirthDay": "25", 
+        "dateOfBirthMouth": "5", 
+        "dateOfBirthYear": "1962", 
+        "address": "69 Bld de Résistance'", 
+        "postalCode": "33000", 
+        "city" : "3306333000", 
+        "countryZone" : "FR" , 
+        "email" : "youyou@yopmail.com",
+        "cellPhoneNumber" : "06785541211", 
+        "phoneNumber" : "05687652180",
+        "childNumber" : "2",  
+        "insurance_subscribers" : "YES_NO"
+    },
+    "identity_partenaire":{
+        "partnerGender" :"#GENDERCODE_MLLE",
+        "partnerLastName": "angelina",
+        "partnerFirstName": "jolie",
+        "partnerDateOfBirthDay": "5",
+        "partnerDateOfBirthMouth": "12",
+        "partnerDateOfBirthYear": "1960",
+        "partnerPostalCode" :"92000",
+        "partnerCity" :"9205092000"
+    },
+    "activity":{
+        "activitySector" : "RETIRED", 
+        "profession" : "RETIRED_FROM_PUBLIC_SECTOR",
+        "pensionFromMouth" : "05", 
+        "pensionFromYear" : "2018",
+        "mainIncome" : "2002" 
+    },
+    "activity_partenaire":{
+        "partnerActivitySector": "RETIRED",
+        "partnerProfession": "RETIRED_FROM_PRIVATE_SECTOR",
+        "partnerPensionFromMouth" : "7", 
+        "partnerPensionFromYear" : "2009",
+        "coIncome" : "3450"
+    },
+    "logement":{
+        "housingStatus" : "LODGING_PROVIDED_BY_PARTNER", 
+        "housingStatusMouth" : "8",
+        "housingStatusYear" : "1988", 
+        "housingAssistance" : "0", 
+        "additionalIncome" : "1200", 
+        "mortgageAmount" : "1200",
+        "rentAmount" : "250",
+        "childSupportPaymentsAmount" : "0",
+        "childCareExpensesAmount" : "500",
+        "loanCount" : "0"
+    },
+    "banque":{
+        "bankCode" : "HSBC", 
+        "bankFromYear" : "1985" 
+    }, 
+     "activityStatus":{
+        "isIndependent":false,
+        "isSalarie":false,
+        "isRetired":true
+    },
+    "activityStatus_partenaire":{
+        "isMariedOrPaced":true,
+        "isSalarie":false, 
+        "isRetired":true
+    },
+    "situation_logement":{
+        "isOwner":false,
+        "isTenant":true, 
+        "isOwnerWithCredit":false,
+        "isParent":true,
+         "haveOtherLoan":true
+    },
+    "mariedStatus":{
+        "isMariedOrPaced":true
+    },
+    "partnerStatus":{
+        "isPartner":true,
+        "isMaried": false
+    }
+}
